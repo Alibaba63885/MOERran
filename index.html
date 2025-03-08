@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>محمد اویس - ارننگ پلیٹ فارم</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+        body {
             font-family: 'Segoe UI', Tahoma, sans-serif;
             background: linear-gradient(45deg, #74ebd5, #acb6e5);
             color: #333;
@@ -15,6 +18,7 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         .welcome-page {
             position: fixed;
@@ -48,10 +52,11 @@
             border-radius: 15px;
             cursor: pointer;
             font-size: clamp(16px, 4vw, 20px);
-            transition: transform 0.3s;
+            transition: transform 0.3s, background 0.3s;
         }
         .welcome-btn:hover {
             transform: scale(1.1);
+            background: #218838;
         }
         .header {
             background: linear-gradient(45deg, #ff4b2b, #ff6f61);
@@ -64,21 +69,26 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
         .header h1 {
             margin: 0;
-            font-size: clamp(30px, 6vw, 45px);
+            font-size: clamp(24px, 6vw, 36px);
         }
         .header img#logo, .welcome-page img#welcomeLogo {
             width: clamp(40px, 10vw, 50px);
             height: clamp(40px, 10vw, 50px);
             cursor: pointer;
             margin-right: 20px;
+            transition: transform 0.3s;
+        }
+        .header img#logo:hover, .welcome-page img#welcomeLogo:hover {
+            transform: rotate(360deg);
         }
         .main-content {
-            max-width: 100%;
+            max-width: 1200px;
             margin: 80px auto 20px;
-            padding: 15px;
+            padding: 20px;
             background: white;
             border-radius: 20px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
@@ -95,13 +105,14 @@
         }
         .section h2 {
             color: #ff4b2b;
-            font-size: clamp(24px, 5vw, 28px);
+            font-size: clamp(22px, 5vw, 28px);
+            margin-bottom: 10px;
         }
         .earnings-display {
             background: linear-gradient(45deg, #d4edda, #c3e6cb);
             padding: 20px;
             border-radius: 15px;
-            font-size: clamp(24px, 5vw, 28px);
+            font-size: clamp(20px, 5vw, 28px);
             color: #155724;
         }
         .task {
@@ -110,11 +121,14 @@
             margin: 10px 0;
             border-radius: 12px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            text-align: left;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            transition: transform 0.2s;
+        }
+        .task:hover {
+            transform: scale(1.02);
         }
         .task a {
             color: #007bff;
@@ -130,17 +144,21 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: clamp(14px, 3vw, 16px);
+            transition: background 0.3s;
+        }
+        .task button:hover:not(:disabled) {
+            background: #0056b3;
         }
         .task button:disabled {
             background: #6c757d;
             cursor: not-allowed;
         }
         .task .cooldown {
-            font-size: clamp(8px, 2vw, 10px);
+            font-size: clamp(10px, 2vw, 12px);
             color: #666;
             position: absolute;
             bottom: 5px;
-            right: 5px;
+            right: 10px;
         }
         .rules {
             background: #fff3cd;
@@ -152,6 +170,7 @@
             color: #d63031;
             font-weight: bold;
             font-size: clamp(14px, 3vw, 16px);
+            margin: 5px 0;
         }
         .admin-message {
             background: linear-gradient(45deg, #ffd700, #ffec80);
@@ -165,19 +184,25 @@
         .admin-message button {
             background: #28a745;
             color: white;
-            padding: 5px 10px;
+            padding: 8px 15px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
             margin-left: 10px;
+            transition: background 0.3s;
+        }
+        .admin-message button:hover:not(:disabled) {
+            background: #218838;
         }
         .withdraw input, .withdraw select {
             padding: 12px;
-            width: 90%;
-            margin: 10px 0;
+            width: 100%;
+            max-width: 400px;
+            margin: 10px auto;
             border-radius: 8px;
             border: 2px solid #ced4da;
             font-size: clamp(14px, 3vw, 16px);
+            display: block;
         }
         .withdraw button {
             background: #28a745;
@@ -187,6 +212,10 @@
             border-radius: 10px;
             cursor: pointer;
             font-size: clamp(16px, 4vw, 18px);
+            transition: background 0.3s;
+        }
+        .withdraw button:hover {
+            background: #218838;
         }
         .auth-popup {
             display: none;
@@ -194,22 +223,27 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             padding: 20px;
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
             z-index: 40;
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
             width: 90%;
             max-width: 400px;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
         .auth-popup h3 {
             color: #ff4b2b;
             font-size: clamp(20px, 5vw, 24px);
+            margin-bottom: 15px;
         }
         .auth-popup input {
             padding: 12px;
-            width: 85%;
+            width: 100%;
             margin: 10px 0;
             border-radius: 10px;
             border: 2px solid #ced4da;
@@ -224,14 +258,18 @@
             cursor: pointer;
             margin: 10px;
             font-size: clamp(14px, 3vw, 16px);
+            transition: background 0.3s;
+        }
+        .auth-popup button:hover {
+            background: #e03e2d;
         }
         .admin-section {
             display: none;
             width: 100%;
-            max-width: 300px;
+            max-width: 350px;
             height: 100vh;
             background: linear-gradient(135deg, #2c3e50, #1a1a2e);
-            padding: 15px;
+            padding: 20px;
             border-radius: 0 25px 25px 0;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.7);
             z-index: 40;
@@ -248,11 +286,11 @@
             text-align: center;
         }
         .admin-header h2 {
-            font-size: clamp(24px, 5vw, 28px);
+            font-size: clamp(22px, 5vw, 28px);
             margin: 0;
         }
         .admin-container {
-            margin: 15px 0;
+            margin: 20px 0;
         }
         .admin-card {
             background: rgba(255, 255, 255, 0.9);
@@ -284,10 +322,11 @@
             padding: 5px;
             background: #f8f9fa;
             border-radius: 5px;
+            font-size: clamp(12px, 3vw, 14px);
         }
         .search-bar {
             padding: 10px;
-            width: 90%;
+            width: 100%;
             margin: 10px 0;
             border-radius: 5px;
             border: 2px solid #ffd700;
@@ -333,7 +372,7 @@
         }
         .control-input {
             padding: 10px;
-            width: 90%;
+            width: 100%;
             margin: 10px 0;
             border-radius: 5px;
             border: 2px solid #ffd700;
@@ -372,6 +411,10 @@
         .profile-section {
             cursor: pointer;
             background: #e9ecef;
+            transition: background 0.3s;
+        }
+        .profile-section:hover {
+            background: #dfe2e6;
         }
         .profile-details {
             display: none;
@@ -390,11 +433,13 @@
             border-radius: 12px;
         }
         .complain-box textarea {
-            width: 90%;
+            width: 100%;
+            max-width: 400px;
             padding: 10px;
             border-radius: 5px;
             border: 2px solid #ced4da;
             font-size: clamp(14px, 3vw, 16px);
+            resize: vertical;
         }
         .complain-box button {
             background: #28a745;
@@ -404,114 +449,70 @@
             border-radius: 10px;
             cursor: pointer;
             font-size: clamp(14px, 3vw, 16px);
-        }
-        .lion {
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: clamp(100px, 20vw, 150px);
-            height: clamp(100px, 20vw, 150px);
-            background: url('https://cdn.pixabay.com/animation/2023/03/01/11/12/11-12-32-512_512.png') no-repeat center;
-            background-size: contain;
-            animation: walk 5s infinite linear;
-            z-index: 10;
-        }
-        @keyframes walk {
-            0% { transform: translateX(-50%) translateY(0) rotate(0deg); }
-            50% { transform: translateX(-50%) translateY(-10px) rotate(5deg); }
-            100% { transform: translateX(-50%) translateY(0) rotate(0deg); }
-        }
-        .butterfly {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            width: clamp(40px, 10vw, 60px);
-            height: clamp(40px, 10vw, 60px);
-            background: url('https://cdn.pixabay.com/animation/2023/06/13/15/29/15-29-43-209_512.gif') no-repeat center;
-            background-size: contain;
-            animation: fly 15s infinite;
-            z-index: 10;
-            filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3));
-        }
-        @keyframes fly {
-            0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-            20% { transform: translate(200px, 50px) rotate(45deg); opacity: 0.8; }
-            40% { transform: translate(100px, 100px) rotate(-30deg); opacity: 0; }
-            60% { transform: translate(300px, 20px) rotate(60deg); opacity: 1; }
-            80% { transform: translate(50px, 150px) rotate(0deg); opacity: 0.5; }
-            100% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
-        }
-        .old-post-dot {
-            position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 10px;
-            height: 10px;
-            background: #ccc;
-            border-radius: 50%;
-            cursor: pointer;
             transition: background 0.3s;
         }
-        .old-post-dot:hover {
-            background: #ff4b2b;
+        .complain-box button:hover {
+            background: #218838;
         }
-        .info-btn {
-            position: absolute;
-            top: 5px;
-            left: 5px;
-            width: 20px;
-            height: 20px;
-            background: #ff4b2b;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 12px;
-            line-height: 20px;
-            transition: transform 0.3s;
+        /* میڈیا کوئریز برائے ریسپانسیو ڈیزائن */
+        @media (max-width: 768px) {
+            .main-content {
+                margin: 70px 10px 10px;
+                padding: 15px;
+            }
+            .header h1 {
+                font-size: 24px;
+            }
+            .welcome-btn, .task button, .withdraw button, .auth-popup button {
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+            .task {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .admin-section {
+                max-width: 100%;
+                border-radius: 0;
+            }
         }
-        .info-btn:hover {
-            transform: scale(1.2);
-        }
-        .info-text {
-            display: none;
-            position: absolute;
-            top: 30px;
-            left: 5px;
-            background: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 20;
-            text-align: right;
-            font-size: clamp(12px, 3vw, 14px);
-            color: #333;
-            width: 200px;
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 20px;
+            }
+            .welcome-btn, .task button, .withdraw button, .auth-popup button {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
+            .section h2 {
+                font-size: 20px;
+            }
         }
     </style>
+    <script src="https://www.youtube.com/iframe_api"></script>
 </head>
 <body>
     <div class="welcome-page" id="welcomePage">
         <img id="welcomeLogo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIyNSIgZmlsbD0idXJsKCNncmFkKSIvPgogIDx0ZXh0IHg9IjEyIiB5PSIzMiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIj5NTzwvdGV4dD4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjMzQ5OGRiIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iIzJkODdjMiIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+Cjwvc3ZnPg==" alt="لوگو">
         <h1>خوش آمدید!</h1>
-        <p>محمد اویس ارننگ پلیٹ فارم پر آپ کا شاندار استقبال ہے۔ کامیاب رہنے کی راہ پر گامزن ہو جائیں۔</p>
+        <p>محمد اویس ارننگ پلیٹ فارم پر آپ کا شاندار استقبال ہے۔ کامیابی کی راہ پر گامزن ہوں!</p>
         <button class="welcome-btn" onclick="showSignup()">اکاؤنٹ بنائیں</button>
         <button class="welcome-btn" onclick="showLogin()">لاگ ان کریں</button>
     </div>
 
     <div class="auth-popup" id="signupPopup">
         <h3>نیا اکاؤنٹ بنائیں</h3>
-        <input type="text" id="signupName" placeholder="اپنا نام درج کریں">
-        <input type="password" id="signupPassword" placeholder="پاس ورڈ بنائیں">
+        <input type="text" id="signupName" placeholder="اپنا نام درج کریں" required>
+        <input type="password" id="signupPassword" placeholder="پاس ورڈ بنائیں" required>
         <button onclick="userSignup()">اکاؤنٹ بنائیں</button>
         <button onclick="hidePopup('signupPopup')">بیک</button>
     </div>
 
     <div class="auth-popup" id="loginPopup">
         <h3>لاگ ان کریں</h3>
-        <input type="text" id="loginName" placeholder="اپنا نام درج کریں">
-        <input type="password" id="loginPassword" placeholder="پاس ورڈ">
+        <input type="text" id="loginName" placeholder="اپنا نام درج کریں" required>
+        <input type="password" id="loginPassword" placeholder="پاس ورڈ" required>
         <button onclick="userLogin()">لاگ ان</button>
         <button onclick="hidePopup('loginPopup')">بیک</button>
     </div>
@@ -520,18 +521,19 @@
         <img id="logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIyNSIgZmlsbD0idXJsKCNncmFkKSIvPgogIDx0ZXh0IHg9IjEyIiB5PSIzMiIgZm9udC1zaXplPSIyMCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIj5NTzwvdGV4dD4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ3JhZCIgeDE9IjAiIHkxPSIwIiB4Mj0iMTAwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZmY0YjJiIi8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2ZmNmY2MSIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+Cjwvc3ZnPg==" alt="لوگو">
         <h1>محمد اویس - ارننگ پلیٹ فارم</h1>
     </div>
+
     <div class="main-content" id="mainContent">
-        <div class="butterfly"></div>
         <div class="section profile-section" onclick="toggleProfile()">
             <h2 id="profileName">یہاں آپ کا نام</h2>
             <div class="profile-details" id="profileDetails">
                 <p>نام: <span id="userName"></span></p>
                 <p>یوزر آئی ڈی: <span id="userID"></span></p>
                 <p>اکاؤنٹ بنانے کی تاریخ: <span id="accountDate"></span></p>
+                <p>ریفرلز: <span id="userReferrals">0</span></p>
             </div>
         </div>
         <div class="section earnings-display">
-            <h2>آپ کی کل ارننگ: <span id="earnings">0 روپے</span></h2>
+            <h2>آپ کی کل کمائی: <span id="earnings">0 روپے</span></h2>
         </div>
         <div class="section admin-message" id="adminMessageSection">
             <h2>ایڈمن کا پیغام</h2>
@@ -540,16 +542,12 @@
             <span id="likeCount">0</span>
         </div>
         <div class="section tasks" id="tasksSection">
-            <button class="info-btn" onclick="toggleInfo('tasksInfo')">?</button>
-            <div class="info-text" id="tasksInfo">
-                ٹاسکس مکمل کرنے کے لیے: <br>1. ویڈیو لنک پر کلک کریں۔ <br>2. ویڈیو مکمل دیکھیں۔ <br>3. "مکمل کیا" بٹن دبائیں۔ <br>ہر ٹاسک سے کمائیں!
-            </div>
             <h2>ٹاسکس مکمل کریں</h2>
             <p>ہر ویڈیو مکمل دیکھیں اور کمائیں!</p>
         </div>
         <div class="section referral-section">
             <h2>دوستوں کو مدعو کریں</h2>
-            <p>ہر دوست کے سائن اپ پر 5% بونس ملے گا، اور ان کے ریفرل کا 3% بھی آپ کو ملے گا!</p>
+            <p>ہر دوست کے سائن اپ پر 50 روپے بونس، 5% ان کی کمائی کا، اور 3% ان کے ریفرلز کی کمائی کا!</p>
             <input type="text" id="referralLink" readonly>
             <button onclick="copyReferralLink()">لنک کاپی کریں</button>
         </div>
@@ -558,13 +556,9 @@
             <div id="rulesContent"></div>
         </div>
         <div class="section withdraw">
-            <button class="info-btn" onclick="toggleInfo('withdrawInfo')">?</button>
-            <div class="info-text" id="withdrawInfo">
-                ودھ ڈراول کے لیے: <br>1. درست نمبر درج کریں۔ <br>2. ایزی پیسہ یا جیز کیش منتخب کریں۔ <br>3. کم از کم 1000 روپے ہونے چاہئیں۔ <br>درست معلومات سے فوری ادائیگی ملے گی!
-            </div>
-            <h2>کمائی حاصل کریں</h2>
-            <p>کم از کم 1000 روپے کمائیں۔</p>
-            <input type="text" id="withdrawNumber" placeholder="اپنا نمبر درج کریں">
+            <h2>کمائی واپس لیں</h2>
+            <p>کم از کم 1000 روپے اور پہلے 3 ریفرلز درکار ہیں۔</p>
+            <input type="text" id="withdrawNumber" placeholder="اپنا نمبر درج کریں" required>
             <select id="withdrawMethod">
                 <option value="easypaisa">ایزی پیسہ</option>
                 <option value="jazzcash">جیز کیش</option>
@@ -575,7 +569,7 @@
         <div class="section withdraw-history">
             <h2>ودھ ڈراول ہسٹری</h2>
             <table id="withdrawHistoryTable">
-                <tr><th>تاریخ</th><th>رقم</th><th>اکاؤنٹ/نمبر</th></tr>
+                <tr><th>تاریخ</th><th>رقم</th><th>اکاؤنٹ/نمبر</th><th>سٹیٹس</th></tr>
             </table>
         </div>
         <div class="section complain-box">
@@ -588,14 +582,12 @@
 
     <div class="auth-popup" id="adminLoginPopup">
         <h3>مین ایڈمن لاگ ان</h3>
-        <input type="password" id="adminPassword" placeholder="ایڈمن پاس ورڈ">
+        <input type="password" id="adminPassword" placeholder="ایڈمن پاس ورڈ" required>
         <button onclick="mainAdminLogin()">لاگ ان</button>
         <button onclick="hidePopup('adminLoginPopup')">بیک</button>
     </div>
 
     <div class="admin-section" id="adminSection">
-        <div class="butterfly"></div>
-        <div class="lion"></div>
         <div class="admin-header">
             <h2>مین ایڈمن روم</h2>
             <p>ہر چیز پر مکمل کنٹرول!</p>
@@ -618,12 +610,12 @@
             <div class="admin-card">
                 <h2>ودھ ڈراول درخواستیں</h2>
                 <table id="withdrawalsTable">
-                    <tr><th>نام</th><th>رقم</th><th>حالت</th><th>کنٹرول</th></tr>
+                    <tr><th>نام</th><th>رقم</th><th>نمبر</th><th>طریقہ</th><th>حالت</th><th>کنٹرول</th></tr>
                 </table>
             </div>
             <div class="admin-card">
                 <h2>ویڈیو لنکس اور قیمت تبدیل کریں</h2>
-                <input type="number" class="control-input" id="videoIndex" placeholder="ویڈیو نمبر" min="1">
+                <input type="number" class="control-input" id="videoIndex" placeholder="ویڈیو نمبر" min="1" required>
                 <input type="text" class="control-input" id="newVideoLink" placeholder="نیا لنک (خالی چھوڑیں اگر صرف قیمت تبدیل کرنی ہو)">
                 <input type="number" class="control-input" id="videoPrice" placeholder="نئی قیمت (روپے)" min="1">
                 <button class="control-btn" onclick="changeVideoLink()">تبدیل کریں</button>
@@ -645,42 +637,43 @@
     </div>
 
     <script>
-        const mainAdminPassword = "MohammadOwaisAdmin2025!@#$ecure";
+        // ڈیٹا انیشلائزیشن
+        const mainAdminPassword = "MohammadOwaisAdmin2025!@#$ecure"; // سرور پر منتقل کرنے کی تجویز
         let users = JSON.parse(localStorage.getItem("users")) || {};
         let withdrawals = JSON.parse(localStorage.getItem("withdrawals")) || [];
         let withdrawHistory = JSON.parse(localStorage.getItem("withdrawHistory")) || {};
-        let adminMessage = localStorage.getItem("adminMessage") || "یہاں ایڈمن کا تازہ ترین پیغام دکھائی دے گا۔";
+        let adminMessage = localStorage.getItem("adminMessage") || "خوش آمدید! اپنی کمائی شروع کریں۔";
         let rules = JSON.parse(localStorage.getItem("rules")) || [
-            "ہر ویڈیو مکمل دیکھیں۔",
-            "دھوکہ دہی پر اکاؤنٹ معطل ہوگا۔",
-            "اپنے اکاؤنٹ کا صحیح نمبر درج کریں تاکہ ودھ ڈراول آسانی سے ہو۔"
+            "ہر ویڈیو مکمل دیکھیں ورنہ کمائی نہیں ملے گی۔",
+            "دھوکہ دہی پر اکاؤنٹ فوری معطل ہوگا۔",
+            "صحیح معلومات درج کریں تاکہ ودھ ڈراول میں تاخیر نہ ہو۔"
         ];
-        let currentUser = null;
         let videoLinks = JSON.parse(localStorage.getItem("videoLinks")) || [
             { link: "https://www.youtube.com/watch?v=dQw4w9WgXcQ", price: 10 },
-            { link: "https://www.youtube.com/watch?v=3tmd-Claq34", price: 10 },
-            { link: "https://www.youtube.com/watch?v=9bZkp7q19f0", price: 10 }
+            { link: "https://www.youtube.com/watch?v=3tmd-Claq34", price: 15 },
+            { link: "https://www.youtube.com/watch?v=9bZkp7q19f0", price: 20 }
         ];
         let taskCooldowns = JSON.parse(localStorage.getItem("taskCooldowns")) || {};
-        let videoTimers = {};
         let likes = JSON.parse(localStorage.getItem("likes")) || { total: 0 };
         let oldPosts = JSON.parse(localStorage.getItem("oldPosts")) || [];
         let complains = JSON.parse(localStorage.getItem("complains")) || {};
+        let currentUser = null;
         let isAdminLoggedIn = false;
         let tapCount = 0;
         let welcomeTapCount = 0;
+        let players = {};
 
+        // صفحہ لوڈ ہونے پر
         window.onload = function() {
             document.getElementById("welcomePage").style.display = "flex";
-            document.getElementById("adminMessageText").innerText = adminMessage;
-            document.getElementById("likeCount").innerText = likes.total || 0;
-            document.getElementById("likeButton").disabled = currentUser && likes[currentUser] ? true : false;
-            loadTasks();
-            loadRules();
-            validateLocalStorage();
-            loadOldPosts();
+            checkReferralFromURL();
+            loadRulesAndMessages();
+            if (localStorage.getItem("currentUser")) {
+                userLoginFromStorage();
+            }
         };
 
+        // ایڈمن لاگ ان کے لیے لوگو پر کلک
         document.getElementById('logo').addEventListener('click', function() {
             tapCount++;
             if (tapCount === 5) {
@@ -697,15 +690,7 @@
             }
         });
 
-        function validateLocalStorage() {
-            try {
-                localStorage.setItem("test", "test");
-                localStorage.removeItem("test");
-            } catch (e) {
-                alert("براؤزر لوکل اسٹوریج کی اجازت نہیں دیتا۔ براہ کرم سیٹنگز چیک کریں۔");
-            }
-        }
-
+        // بنیادی فنکشنز
         function showSignup() {
             document.getElementById("welcomePage").style.display = "none";
             document.getElementById("signupPopup").style.display = "block";
@@ -734,19 +719,24 @@
             }
             const userID = "UID" + Math.random().toString(36).substr(2, 9);
             const createdDate = new Date().toLocaleString();
+            const referrer = new URLSearchParams(window.location.search).get("ref");
             users[name] = {
                 password: password,
                 earnings: 0,
                 tasksCompleted: 0,
-                lastTaskTime: 0,
                 number: "",
                 referrals: 0,
                 withdrawalCount: 0,
                 userID: userID,
                 createdDate: createdDate,
-                referrer: null,
+                referrer: referrer ? (users[referrer] ? referrer : null) : null,
                 lastComplainDate: null
             };
+            if (referrer && users[referrer]) {
+                users[referrer].referrals += 1;
+                users[referrer].earnings += 50;
+                alert(`${referrer} کو 50 روپے بونس مل گیا!`);
+            }
             localStorage.setItem("users", JSON.stringify(users));
             alert("اکاؤنٹ کامیابی سے بن گیا! اب لاگ ان کریں۔");
             hidePopup("signupPopup");
@@ -757,13 +747,24 @@
             const password = document.getElementById("loginPassword").value.trim();
             if (users[name] && users[name].password === password) {
                 currentUser = name;
+                localStorage.setItem("currentUser", name);
                 isAdminLoggedIn = false;
                 loadUserData();
                 document.getElementById("loginPopup").style.display = "none";
                 document.getElementById("mainContent").style.display = "block";
                 document.getElementById("adminSection").style.display = "none";
             } else {
-                alert("غلط نام یا پاس ورڈ! براہ کرم دوبارہ کوشش کریں۔");
+                alert("غلط نام یا پاس ورڈ!");
+            }
+        }
+
+        function userLoginFromStorage() {
+            const name = localStorage.getItem("currentUser");
+            if (users[name]) {
+                currentUser = name;
+                loadUserData();
+                document.getElementById("welcomePage").style.display = "none";
+                document.getElementById("mainContent").style.display = "block";
             }
         }
 
@@ -775,12 +776,11 @@
             document.getElementById("userName").innerText = currentUser;
             document.getElementById("userID").innerText = user.userID;
             document.getElementById("accountDate").innerText = user.createdDate;
-            document.getElementById("referralLink").value = `https://mohammad-owais-earning.com/?ref=${user.userID}`;
-            document.getElementById("adminMessageText").innerText = adminMessage;
-            document.getElementById("likeCount").innerText = likes.total || 0;
-            document.getElementById("likeButton").disabled = likes[currentUser] || false;
+            document.getElementById("userReferrals").innerText = user.referrals;
+            document.getElementById("referralLink").value = `${window.location.origin}/?ref=${user.userID}`;
+            loadTasks();
             loadWithdrawHistory();
-            loadRules();
+            loadRulesAndMessages();
         }
 
         function toggleProfile() {
@@ -791,77 +791,72 @@
         function loadTasks() {
             const tasksSection = document.getElementById("tasksSection");
             tasksSection.innerHTML = `
-                <button class="info-btn" onclick="toggleInfo('tasksInfo')">?</button>
-                <div class="info-text" id="tasksInfo">
-                    ٹاسکس مکمل کرنے کے لیے: <br>1. ویڈیو لنک پر کلک کریں۔ <br>2. ویڈیو مکمل دیکھیں۔ <br>3. "مکمل کیا" بٹن دبائیں۔ <br>ہر ٹاسک سے کمائیں!
-                </div>
                 <h2>ٹاسکس مکمل کریں</h2>
                 <p>ہر ویڈیو مکمل دیکھیں اور کمائیں!</p>
             `;
             videoLinks.forEach((video, i) => {
                 const task = document.createElement("div");
                 task.className = "task";
-                task.innerHTML = `<p>ویڈیو ${i + 1}: <a href="${video.link}" target="_blank" onclick="startVideoTimer('${i}')">ویڈیو دیکھیں</a> (${video.price} روپے)</p><button onclick="addEarnings(${video.price}, this, ${i})">مکمل کیا</button><span class="cooldown" id="cooldown-${i}"></span>`;
+                task.innerHTML = `
+                    <p>ویڈیو ${i + 1}: <a href="${video.link}" target="_blank" onclick="startVideo('${i}')">ویڈیو دیکھیں</a> (${video.price} روپے)</p>
+                    <button id="complete-btn-${i}" onclick="addEarnings(${video.price}, this, ${i})" disabled>مکمل کیا</button>
+                    <span class="cooldown" id="cooldown-${i}"></span>
+                `;
                 tasksSection.appendChild(task);
             });
             if (currentUser) updateCooldowns();
         }
 
-        function startVideoTimer(videoIndex) {
-            if (!currentUser) return;
-            videoTimers[currentUser + videoIndex] = {
-                startTime: Date.now(),
-                isActive: true
-            };
-            window.addEventListener('focus', () => checkVideoCompletion(videoIndex));
+        function startVideo(videoIndex) {
+            if (!currentUser) {
+                alert("براہ کرم پہلے لاگ ان کریں!");
+                return;
+            }
+            const videoId = videoLinks[videoIndex].link.split("v=")[1].split("&")[0];
+            const playerDiv = document.createElement("div");
+            playerDiv.id = `player-${videoIndex}`;
+            playerDiv.style.display = "none"; // ویڈیو پلیئر چھپائیں
+            document.body.appendChild(playerDiv);
+            players[videoIndex] = new YT.Player(`player-${videoIndex}`, {
+                height: '1',
+                width: '1',
+                videoId: videoId,
+                playerVars: { 'autoplay': 1, 'controls': 0, 'rel': 0 },
+                events: {
+                    'onStateChange': (event) => onPlayerStateChange(event, videoIndex),
+                    'onError': (event) => alert("ویڈیو میں خرابی: " + event.data)
+                }
+            });
         }
 
-        function checkVideoCompletion(videoIndex) {
-            if (!currentUser) return;
-            const timer = videoTimers[currentUser + videoIndex];
-            if (timer && timer.isActive) {
-                const elapsed = (Date.now() - timer.startTime) / 1000;
-                if (elapsed < 300) { // Assuming 5 minutes minimum
-                    timer.isActive = false;
-                    alert("دھوکہ دہی کا پتہ چلا! ویڈیو مکمل دیکھیں۔");
-                }
+        function onPlayerStateChange(event, videoIndex) {
+            if (event.data === YT.PlayerState.ENDED && currentUser) {
+                document.getElementById(`complete-btn-${videoIndex}`).disabled = false;
+                document.body.removeChild(document.getElementById(`player-${videoIndex}`));
+                delete players[videoIndex];
             }
         }
 
         function addEarnings(amount, button, videoIndex) {
             if (!currentUser) return;
-            const timer = videoTimers[currentUser + videoIndex];
-            if (!timer || !timer.isActive || (Date.now() - timer.startTime) / 1000 < 300) {
-                alert("دھوکہ دہی کا پتہ چلا! ویڈیو مکمل دیکھیں ورنہ اکاؤنٹ معطل ہو سکتا ہے۔");
-                if (confirm("کیا آپ اپنا اکاؤنٹ معطل کروانا چاہتے ہیں؟")) {
-                    delete users[currentUser];
-                    localStorage.setItem("users", JSON.stringify(users));
-                    alert("آپ کا اکاؤنٹ معطل ہو گیا!");
-                    location.reload();
-                }
-                return;
-            }
-            users[currentUser].earnings += amount;
-            if (users[currentUser].referrer) {
-                const referrer = users[currentUser].referrer;
-                users[referrer].earnings += amount * 0.05; // 5% for direct referral
-                if (users[referrer].referrer) {
-                    users[users[referrer].referrer].earnings += amount * 0.03; // 3% for second-level referral
+            const user = users[currentUser];
+            user.earnings += amount;
+            if (user.referrer) {
+                const referrer = users[user.referrer];
+                referrer.earnings += amount * 0.05; // 5% بونس
+                if (referrer.referrer) {
+                    users[referrer.referrer].earnings += amount * 0.03; // 3% بونس
                 }
             }
-            users[currentUser].tasksCompleted += 1;
-            document.getElementById("earnings").innerText = users[currentUser].earnings + " روپے";
+            user.tasksCompleted += 1;
+            document.getElementById("earnings").innerText = user.earnings + " روپے";
             button.disabled = true;
             button.innerText = "مکمل ہو گیا";
             if (!taskCooldowns[currentUser]) taskCooldowns[currentUser] = {};
             taskCooldowns[currentUser][videoIndex] = Date.now();
             localStorage.setItem("users", JSON.stringify(users));
             localStorage.setItem("taskCooldowns", JSON.stringify(taskCooldowns));
-            alert("مبارک ہو! آپ نے " + amount + " روپے کمائے۔");
-            setTimeout(() => {
-                button.disabled = false;
-                button.innerText = "مکمل کیا";
-            }, 30 * 60 * 1000); // 30 منٹ بعد دوبارہ ایکٹیویٹ
+            alert(`مبارک ہو! آپ نے ${amount} روپے کمائے۔`);
             updateCooldowns();
         }
 
@@ -871,15 +866,17 @@
                 const cooldownElement = document.getElementById(`cooldown-${i}`);
                 const lastTaskTime = taskCooldowns[currentUser]?.[i] || 0;
                 const currentTime = Date.now();
-                const remaining = 30 * 60 * 1000 - (currentTime - lastTaskTime); // 30 منٹ کول ڈاؤن
+                const remaining = 30 * 60 * 1000 - (currentTime - lastTaskTime);
                 if (remaining > 0) {
                     const minutes = Math.ceil(remaining / 1000 / 60);
-                    cooldownElement.innerText = `30 منٹ بعد دوبارہ کوشش کریں (${minutes} منٹ باقی)`;
+                    cooldownElement.innerText = `دوبارہ کوشش: ${minutes} منٹ`;
                     setTimeout(updateCooldowns, 60000);
                 } else {
                     cooldownElement.innerText = "";
-                    const button = document.querySelectorAll(".task button")[i];
-                    if (button) button.disabled = false;
+                    const button = document.getElementById(`complete-btn-${i}`);
+                    if (button && button.innerText === "مکمل ہو گیا") {
+                        button.disabled = true; // کول ڈاؤن ختم ہونے کے بعد بھی دوبارہ فعال نہیں ہوگا جب تک نئی ویڈیو نہ دیکھی جائے
+                    }
                 }
             });
         }
@@ -887,36 +884,41 @@
         function checkWithdrawal() {
             if (!currentUser) return;
             const user = users[currentUser];
+            const number = document.getElementById("withdrawNumber").value.trim();
+            const method = document.getElementById("withdrawMethod").value;
             if (user.earnings < 1000) {
                 alert("کم از کم 1000 روپے کمائیں!");
                 return;
             }
             if (user.withdrawalCount === 0 && user.referrals < 3) {
-                alert("پہلی ودھ ڈراول کے لیے 3 دوست بنائیں!");
+                alert("پہلی ودھ ڈراول کے لیے 3 ریفرلز درکار ہیں!");
                 return;
             }
-            const number = document.getElementById("withdrawNumber").value.trim();
-            const method = document.getElementById("withdrawMethod").value;
+            if (!number.match(/^\d{11}$/)) {
+                alert("براہ کرم درست 11 ہندسوں کا نمبر درج کریں!");
+                return;
+            }
             const amount = user.earnings;
-            withdrawals.push({ user: currentUser, number, amount, method, status: "processing" });
+            withdrawals.push({ user: currentUser, number, amount, method, status: "processing", date: new Date().toLocaleString() });
             user.number = number;
             if (!withdrawHistory[currentUser]) withdrawHistory[currentUser] = [];
-            withdrawHistory[currentUser].push({ date: new Date().toLocaleString(), amount, number });
+            withdrawHistory[currentUser].push({ date: new Date().toLocaleString(), amount, number, status: "processing" });
             localStorage.setItem("withdrawals", JSON.stringify(withdrawals));
             localStorage.setItem("withdrawHistory", JSON.stringify(withdrawHistory));
-            alert("درخواست موصول ہوئی!");
+            alert("ودھ ڈراول درخواست موصول ہوئی!");
             loadWithdrawHistory();
-            document.getElementById("withdrawStatus").innerText = "پروسیسنگ جاری ہے...";
+            document.getElementById("withdrawStatus").innerText = "پروسیسنگ میں ہے...";
+            document.getElementById("withdrawNumber").value = "";
         }
 
         function loadWithdrawHistory() {
             if (!currentUser) return;
             const table = document.getElementById("withdrawHistoryTable");
-            table.innerHTML = "<tr><th>تاریخ</th><th>رقم</th><th>اکاؤنٹ/نمبر</th></tr>";
+            table.innerHTML = "<tr><th>تاریخ</th><th>رقم</th><th>اکاؤنٹ/نمبر</th><th>سٹیٹس</th></tr>";
             if (withdrawHistory[currentUser]) {
                 withdrawHistory[currentUser].forEach(w => {
                     const row = table.insertRow();
-                    row.innerHTML = `<td>${w.date}</td><td>${w.amount} روپے</td><td>${w.number}</td>`;
+                    row.innerHTML = `<td>${w.date}</td><td>${w.amount} روپے</td><td>${w.number}</td><td>${w.status === "processing" ? "پروسیسنگ" : "مکمل"}</td>`;
                 });
             }
         }
@@ -927,13 +929,12 @@
             link.select();
             document.execCommand("copy");
             alert("ریفرل لنک کاپی ہو گیا!");
-            const referrer = prompt("ریفرل کا نام درج کریں (اگر کوئی ہو):");
-            if (referrer && users[referrer]) {
-                users[referrer].referrals += 1;
-                users[referrer].earnings += 50;
-                users[currentUser].referrer = referrer;
-                localStorage.setItem("users", JSON.stringify(users));
-                alert(`${referrer} کو 50 روپے بونس مل گیا!`);
+        }
+
+        function checkReferralFromURL() {
+            const referrer = new URLSearchParams(window.location.search).get("ref");
+            if (referrer && !currentUser) {
+                alert(`آپ کو ${referrer} نے مدعو کیا! سائن اپ کے بعد انہیں 50 روپے بونس ملے گا۔`);
             }
         }
 
@@ -974,7 +975,7 @@
                 document.getElementById("welcomePage").style.display = "none";
                 loadMainAdminData();
             } else {
-                alert("غلط پاس ورڈ!");
+                alert("غلط ایڈمن پاس ورڈ!");
             }
         }
 
@@ -995,13 +996,17 @@
             document.getElementById("adminMessageText").innerText = adminMessage;
             document.getElementById("likeCount").innerText = 0;
             document.getElementById("likeButton").disabled = false;
-            alert("پیغام کامیابی سے اپ ڈیٹ ہو گیا!");
+            alert("پیغام اپ ڈیٹ ہو گیا!");
             loadOldPosts();
         }
 
         function likeMessage() {
-            if (!currentUser || likes[currentUser]) {
-                alert("آپ پہلے ہی اس پیغام کو لائک کر چکے ہیں!");
+            if (!currentUser) {
+                alert("براہ کرم لاگ ان کریں!");
+                return;
+            }
+            if (likes[currentUser]) {
+                alert("آپ پہلے ہی لائک کر چکے ہیں!");
                 return;
             }
             likes.total = (likes.total || 0) + 1;
@@ -1017,7 +1022,11 @@
             oldPostsDiv.innerHTML = "";
             if (oldPosts.length > 0) {
                 const dot = document.createElement("div");
-                dot.className = "old-post-dot";
+                dot.style.width = "10px";
+                dot.style.height = "10px";
+                dot.style.background = "#ccc";
+                dot.style.borderRadius = "50%";
+                dot.style.cursor = "pointer";
                 dot.onclick = showOldPosts;
                 oldPostsDiv.appendChild(dot);
             }
@@ -1026,7 +1035,7 @@
         function showOldPosts() {
             const oldPostsDiv = document.getElementById("oldPosts");
             oldPostsDiv.innerHTML = "";
-            oldPosts.forEach((post, i) => {
+            oldPosts.forEach((post) => {
                 const postDiv = document.createElement("div");
                 postDiv.innerHTML = `<p>${post.message} (تاریخ: ${post.date}) - لائکس: ${post.likes}</p>`;
                 oldPostsDiv.appendChild(postDiv);
@@ -1034,21 +1043,22 @@
         }
 
         function loadMainAdminData() {
-            const withdrawalsTable = document.getElementById("withdrawalsTable");
             document.getElementById("adminMessageInput").value = adminMessage;
             document.getElementById("rulesInput").value = rules.join("\n");
-            withdrawalsTable.innerHTML = "<tr><th>نام</th><th>رقم</th><th>حالت</th><th>کنٹرول</th></tr>";
             loadUserList();
             loadComplains();
-
+            const withdrawalsTable = document.getElementById("withdrawalsTable");
+            withdrawalsTable.innerHTML = "<tr><th>نام</th><th>رقم</th><th>نمبر</th><th>طریقہ</th><th>حالت</th><th>کنٹرول</th></tr>";
             withdrawals.forEach((w, i) => {
                 const row = withdrawalsTable.insertRow();
                 row.innerHTML = `
                     <td>${w.user}</td>
                     <td>${w.amount} روپے</td>
+                    <td>${w.number}</td>
+                    <td>${w.method}</td>
                     <td>${w.status === "processing" ? "پروسیسنگ" : "مکمل"}</td>
                     <td>
-                        <button class="control-btn" onclick="approveWithdrawal(${i})" ${w.status === "complete" ? "disabled" : ""}>ادائیگی بھیجیں</button>
+                        <button class="control-btn" onclick="approveWithdrawal(${i})" ${w.status === "complete" ? "disabled" : ""}>منظور</button>
                         <button class="control-btn suspend-btn" onclick="rejectWithdrawal(${i})" ${w.status === "complete" ? "disabled" : ""}>مسترد</button>
                     </td>
                 `;
@@ -1059,8 +1069,9 @@
             const userList = document.getElementById("userList");
             userList.innerHTML = "";
             for (let user in users) {
+                const u = users[user];
                 const userDiv = document.createElement("p");
-                userDiv.innerHTML = `${user} - ${users[user].earnings} روپے - ${users[user].referrals} ریفرلز - ${users[user].userID}
+                userDiv.innerHTML = `${user} - ${u.earnings} روپے - ${u.referrals} ریفرلز - ${u.userID}
                     <button class="control-btn" onclick="payUser('${user}')">ادائیگی</button>
                     <button class="control-btn suspend-btn" onclick="deleteAccount('${user}')">ڈیلیٹ</button>`;
                 userList.appendChild(userDiv);
@@ -1077,9 +1088,10 @@
             const userList = document.getElementById("userList");
             userList.innerHTML = "";
             for (let user in users) {
-                if (users[user].userID.toLowerCase().includes(searchValue)) {
+                if (users[user].userID.toLowerCase().includes(searchValue) || user.toLowerCase().includes(searchValue)) {
+                    const u = users[user];
                     const userDiv = document.createElement("p");
-                    userDiv.innerHTML = `${user} - ${users[user].earnings} روپے - ${users[user].referrals} ریفرلز - ${users[user].userID}
+                    userDiv.innerHTML = `${user} - ${u.earnings} روپے - ${u.referrals} ریفرلز - ${u.userID}
                         <button class="control-btn" onclick="payUser('${user}')">ادائیگی</button>
                         <button class="control-btn suspend-btn" onclick="deleteAccount('${user}')">ڈیلیٹ</button>`;
                     userList.appendChild(userDiv);
@@ -1093,12 +1105,16 @@
                 localStorage.setItem("users", JSON.stringify(users));
                 loadMainAdminData();
                 if (currentUser === user) loadUserData();
-                alert(`${user} کو ادائیگی کامیابی سے کی گئی۔`);
+                alert(`${user} کو ادائیگی کامیاب ہوئی۔`);
             }
         }
 
         function deleteAccount(user) {
             if (confirm(`${user} کا اکاؤنٹ ڈیلیٹ کرنا چاہتے ہیں؟`)) {
+                if (currentUser === user) {
+                    currentUser = null;
+                    localStorage.removeItem("currentUser");
+                }
                 delete users[user];
                 delete withdrawHistory[user];
                 delete complains[user];
@@ -1112,25 +1128,36 @@
 
         function approveWithdrawal(index) {
             const w = withdrawals[index];
-            users[w.user].earnings -= w.amount;
-            users[w.user].withdrawalCount += 1;
-            if (users[w.user].referrer) users[users[w.user].referrer].earnings += w.amount * 0.05;
-            withdrawals[index].status = "complete";
+            const user = users[w.user];
+            user.earnings -= w.amount;
+            user.withdrawalCount += 1;
+            if (user.referrer) users[user.referrer].earnings += w.amount * 0.05;
+            w.status = "complete";
+            withdrawHistory[w.user].find(h => h.date === w.date).status = "complete";
             localStorage.setItem("users", JSON.stringify(users));
             localStorage.setItem("withdrawals", JSON.stringify(withdrawals));
+            localStorage.setItem("withdrawHistory", JSON.stringify(withdrawHistory));
             loadMainAdminData();
             if (currentUser === w.user) {
                 loadUserData();
-                document.getElementById("withdrawStatus").innerText = "";
+                document.getElementById("withdrawStatus").innerText = "ادائیگی مکمل ہو گئی!";
+                setTimeout(() => document.getElementById("withdrawStatus").innerText = "", 3000);
             }
             alert(`ادائیگی ${w.number} کو بھیج دی گئی۔`);
         }
 
         function rejectWithdrawal(index) {
+            const w = withdrawals[index];
             withdrawals.splice(index, 1);
+            withdrawHistory[w.user] = withdrawHistory[w.user].filter(h => h.date !== w.date);
             localStorage.setItem("withdrawals", JSON.stringify(withdrawals));
+            localStorage.setItem("withdrawHistory", JSON.stringify(withdrawHistory));
             loadMainAdminData();
-            if (currentUser) document.getElementById("withdrawStatus").innerText = "";
+            if (currentUser === w.user) {
+                loadUserData();
+                document.getElementById("withdrawStatus").innerText = "درخواست مسترد ہو گئی!";
+                setTimeout(() => document.getElementById("withdrawStatus").innerText = "", 3000);
+            }
             alert("درخواست مسترد ہو گئی۔");
         }
 
@@ -1138,26 +1165,30 @@
             const index = parseInt(document.getElementById("videoIndex").value) - 1;
             const newLink = document.getElementById("newVideoLink").value.trim();
             const newPrice = parseInt(document.getElementById("videoPrice").value) || videoLinks[index]?.price;
-            if (index >= 0) {
-                if (newLink) {
-                    if (index < videoLinks.length) {
-                        videoLinks[index].link = newLink;
-                    } else {
-                        videoLinks.push({ link: newLink, price: newPrice || 10 });
-                    }
-                }
-                if (newPrice && index < videoLinks.length) {
-                    videoLinks[index].price = newPrice;
-                }
-                localStorage.setItem("videoLinks", JSON.stringify(videoLinks));
-                loadTasks();
-                alert(`ویڈیو ${index + 1} تبدیل ہو گئی: ${newLink || videoLinks[index].link} (${videoLinks[index].price} روپے)`);
-                document.getElementById("videoIndex").value = "";
-                document.getElementById("newVideoLink").value = "";
-                document.getElementById("videoPrice").value = "";
-            } else {
-                alert("غلط ویڈیو نمبر درج کریں!");
+            if (isNaN(index) || index < 0) {
+                alert("براہ کرم درست ویڈیو نمبر درج کریں!");
+                return;
             }
+            if (newLink && !newLink.includes("youtube.com/watch?v=")) {
+                alert("براہ کرم درست YouTube لنک درج کریں!");
+                return;
+            }
+            if (newLink) {
+                if (index < videoLinks.length) {
+                    videoLinks[index].link = newLink;
+                } else {
+                    videoLinks.push({ link: newLink, price: newPrice || 10 });
+                }
+            }
+            if (newPrice && index < videoLinks.length) {
+                videoLinks[index].price = newPrice;
+            }
+            localStorage.setItem("videoLinks", JSON.stringify(videoLinks));
+            loadTasks();
+            alert(`ویڈیو ${index + 1} تبدیل ہو گئی: ${newLink || videoLinks[index].link} (${videoLinks[index].price} روپے)`);
+            document.getElementById("videoIndex").value = "";
+            document.getElementById("newVideoLink").value = "";
+            document.getElementById("videoPrice").value = "";
         }
 
         function updateRules() {
@@ -1168,11 +1199,14 @@
             }
             rules = newRules;
             localStorage.setItem("rules", JSON.stringify(rules));
-            loadRules();
-            alert("رولز کامیابی سے اپ ڈیٹ ہو گئے!");
+            loadRulesAndMessages();
+            alert("رولز اپ ڈیٹ ہو گئے!");
         }
 
-        function loadRules() {
+        function loadRulesAndMessages() {
+            document.getElementById("adminMessageText").innerText = adminMessage;
+            document.getElementById("likeCount").innerText = likes.total || 0;
+            document.getElementById("likeButton").disabled = currentUser && likes[currentUser] ? true : false;
             const rulesContent = document.getElementById("rulesContent");
             rulesContent.innerHTML = "";
             rules.forEach(rule => {
@@ -1196,7 +1230,10 @@
 
         function logout() {
             isAdminLoggedIn = false;
+            currentUser = null;
+            localStorage.removeItem("currentUser");
             document.getElementById("adminSection").style.display = "none";
+            document.getElementById("mainContent").style.display = "none";
             document.getElementById("welcomePage").style.display = "flex";
         }
 
@@ -1210,11 +1247,6 @@
                     document.getElementById("welcomePage").style.display = "flex";
                 }
             }
-        }
-
-        function toggleInfo(id) {
-            const info = document.getElementById(id);
-            info.style.display = info.style.display === "block" ? "none" : "block";
         }
     </script>
 </body>
